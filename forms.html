@@ -25,11 +25,69 @@
                         complete: false
                     });
                 };
+
+                $scope.addUser = function (userDetails) {
+                    $scope.message = userDetails.name + " (" + userDetails.email + ") (" +
+                            userDetails.agreed + ")";
+                };
+
+                $scope.message = "Ready";
+
             });
     </script>
+    <style>
+        form .ng-invalid-required.ng-dirty { background-color: lightpink; }
+        form .ng-invalid-email.ng-dirty { background-color: lightgoldenrodyellow; }
+        form .ng-valid.ng-dirty { background-color: lightgreen; }
+        span.summary.ng-invalid { color: red; font-weight: bold; }
+        span.summary.ng-valid { color: green; }
+        div.error {color: red; font-weight: bold; }
+    </style>
 </head>
 <body>
 <div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+    <form novalidate name="myForm" ng-submit="addUser(newUser)">
+        <div class="well">
+            <div class="form-group">
+                <label>Name:</label>
+                <input type="text" name="userName" class="form-control" required ng-model="newUser.name">
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" name="userEmail" class="form-control" required ng-model="newUser.email">
+            </div>
+            <div class="error" ng-show="myForm.userEmail.$invalid && myForm.userEmail.$dirty">
+                <span ng-show="myForm.userEmail.$error.email">
+                    Please enter a valid email address
+                </span>
+                    <span ng-show="myForm.userEmail.$error.required">
+                    Please enter a value
+                </span>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="agreed" requried ng-model="newUser.agreed">
+                    I agree to terms and conditions
+                </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" ng-disabled="myForm.$invalid">OK</button>
+        </div>
+
+
+
+
+
+
+        <div class="well">
+            Message: {{message}}
+            <div>
+                <span class="summary" ng-class="myForm.$valid ? 'ng-valid' : 'ng-invalid'">
+                    {{myForm.$valid}}
+                </span>
+            </div>
+        </div>
+
+    </form>
     <h3 class="panel-header">
     To Do List
     <span class="label label-info">
@@ -72,6 +130,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 
 
