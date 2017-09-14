@@ -1,20 +1,73 @@
-<table class="table">
-    <thead>
-    <tr>
-        <th>#</th>
-        <th>Action</th>
-        <th>Done</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="item in todos" ng-class="$odd ? 'odd' : 'even' ">
-        <!--<td>{{item.action}}</td>-->
-        <!--<td>{{item.complete}}</td>-->
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Directives</title>
+    <script src="angular.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap-theme.css">
+    <script src="test.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        angular.module("exampleApp", ['ngRoute'])
+            .directive('mytable', function() {
+                return {
+                    restrict: 'A',
 
-        <td>{{$index + 1}}</td>
-        <td ng-repeat="(key, value) in item">{{key}}={{value}}</td>
-        <td><span ng-if="$first || $last">{{item.complete}}</span></td>
-    </tr>
-    </tbody>
+                    transclude: true,
 
-</table>
+                    template: [
+                        '<table class="table">',
+                        '<thead>',
+                        '    <tr >',
+                        '        <th ng-repeat="item in names">{{ item }}</th>',
+                        '    </tr>',
+                        '</thead>',
+                        '<tbody>',
+                        '    <tr >',
+                        '        <td>how</td>',
+                        '        <td>are</td>',
+                        '        <td>you</td>',
+                        '    </tr>',
+                        '</tbody>',
+                        '</table>',
+                    ].join(''),
+
+                    link: function(scope, element, attrs) {
+                        console.log("scope = " + scope );
+                        console.log("element = " + element );
+
+
+
+                        var outputObj = function(obj) {
+                            var description = "";
+                            for (var i in obj) {
+                                description += i + " = " + obj[i] + "\n";
+                            }
+                            console.log(description);
+                        };
+
+                        outputObj(scope);
+
+                        scope.names = scope[attrs["mytable"]]
+
+
+
+                    },
+                };
+            })
+            .controller("defaultCtrl", ['$scope', function ($scope) {
+                $scope.names = ["Apples", "Banaas", "Oranges"];
+                $scope.mycity = '北京';
+                $scope.Cities = [{ id: 1, name: '北京', group: '中国' }, { id: 2, name: '上海', group: '中国' }, { id: 3, name: '广州',group:'中国' }];
+                $scope.load =function () {
+                    console.log("hello");
+                }
+            }]);
+    </script>
+
+</head>
+<body ng-controller="defaultCtrl">
+<div mytable="names" youtable="he"></div>
+</body>
+</html>

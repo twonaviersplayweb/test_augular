@@ -2,39 +2,57 @@
 <html lang="en" ng-app="exampleApp">
 <head>
     <meta charset="UTF-8">
-    <title>Forms</title>
+    <title>Promises</title>
     <script src="angular.js"></script>
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
     <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap-theme.css">
     <script>
         angular.module("exampleApp", [])
-            .controller("defaultCtrl", function ($scope) {
-                $scope.todos = [
-                    {id:100, place: "Store", action:"Get groceries", complete: false},
-                    {id:200, place: "Home",  action:"Call plumber", complete: false},
-                    {id:300, place: "Store", action:"Buy running shoes", complete: true}
-                ];
+            .factory("GithubService", function ($q, $http, $timeout) {
+                var service = {
+                    makeMultipleRequests: function (repos) {
+                        var d = $q.defer(),
+                            percentComplete = 0,
+                            output = [];
+                        for (var i=0; i< repos.length; i++){
+                            percentComplete = (i+1)/repos.length * 100;
+                            console.log("hello " + percentComplete);
+
+                            //$timeout(function() {d.notify(percentComplete)}, 0)
+                        }
+                        d.resolve(output);
+                        $timeout(function() {d.notify(percentComplete)}, 3);
+                        d.notify(percentComplete)
+                        console.log("nice");
+                        return d.promise;
+                    }
+                };
+                console.log("don`t worry be happy");
+                return service;
+            })
+            .controller("defaultCtrl", function ($scope, GithubService) {
+
+                GithubService.makeMultipleRequests(['auser/beenive', 'angular/angular.js'])
+                    .then(function (result) {
+
+                        console.log("Success! " + result );
+
+                    }, function (error) {
+                        console.log("Fail");
+                    }, function (percentComplete) {
+                        $sope.data = percentComplete;
+                        console.log("xx is " + percentComplete)
+                    });
             });
     </script>
 
 </head>
-<body>
-<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
-    <form name="myForm" novalidate>
-        <div class="well">
-            <div class="form-group">
-                <label>Select an Action:</label>
-                <select ng-model="selectValue" ng-options="item.action group by item.place for item in todos">
-                    <option value="">(Pick One)</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="well">
-            <p>Model Value: {{selectValue || 'None'}}</p>
-        </div>
-
-    </form>
+<body ng-controller="defaultCtrl">
+<div class="well" promise-worker>
+    <button class="btn btn-primary">Heads</button>
+    <button class="btn btn-primary">Tails</button>
+    <button class="btn btn-primary">Abort</button>
+    Outcome: <span >{{ data }}</span>
 </div>
 
 
