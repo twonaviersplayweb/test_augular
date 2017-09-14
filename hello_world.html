@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="exampleApp">
+<head>
+    <meta charset="UTF-8">
+    <title>Directives</title>
+    <script src="angular.js"></script>
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap-theme.css">
+    <script src="test.js"></script>
+    <script src="angular-route.js"></script>
+    <script>
+        angular.module("exampleApp", ['ngRoute'])
+            .config(['$routeProvider' ,'$locationProvider', function($routeProvider, $locationProvider){
+                $routeProvider.when('/',{template:'这是首页页面'})
+                    .when('/first',{template:'这是第一个页面'})
+                    .when('/second',{template:'这是第二个页面'})
+                    .when('/third',{template:'这是第三个页面'})
+                    .otherwise({redirectTo:'/first'});
+                    console.log('hello');
+            }]);
+    </script>
+
+</head>
+<body>
+<ul>
+    <li><a href="#/">首页</a></li>
+    <li><a href="#/first">第一页面</a></li>
+    <li><a href="#/second">第二页面</a></li>
+    <li><a href="#/third">第三页面</a></li>
+</ul>
+<div ng-view></div>
+</body>
+</html>
